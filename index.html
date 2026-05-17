@@ -247,10 +247,36 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 
 /* LOGO NAV */
-.nav-logo{ text-decoration:none; display:flex; align-items:center; }
-.nav-logo-img{ height:36px; width:auto; transition:opacity .3s; }
-#navbar.scrolled .nav-logo-dark{ display:none!important; }
-#navbar.scrolled .nav-logo-light{ display:block!important; }
+.nav-logo{
+  text-decoration:none;display:flex;align-items:center;gap:.8rem;
+  color:var(--nude-light);transition:color .3s;
+}
+#navbar.scrolled .nav-logo{color:var(--dark-green)}
+.nav-logo-icon{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--dark-green);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;overflow:hidden;
+  border:1px solid rgba(204,168,125,.3);
+  transition:background .3s;
+}
+#navbar.scrolled .nav-logo-icon{
+  background:var(--nude-light);
+  border-color:var(--nude-mid);
+}
+.nav-logo-simbolo{
+  width:22px;height:22px;object-fit:contain;
+  mix-blend-mode:screen;
+}
+.nav-logo-simbolo-dark{display:block}
+.nav-logo-simbolo-light{display:none}
+#navbar.scrolled .nav-logo-simbolo-dark{display:none}
+#navbar.scrolled .nav-logo-simbolo-light{display:block}
+.nav-logo-text{
+  font-family:var(--font-d);font-size:1rem;
+  letter-spacing:.28em;text-transform:uppercase;
+  font-weight:400;line-height:1;
+}
 
 /* HERO SÍMBOLO + ESTAMPA */
 .hero-estampa{
@@ -260,7 +286,15 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
   opacity:.07;
   z-index:0;
 }
-.hero-simbolo{
+.hero-submarca{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:45%;max-width:260px;
+  z-index:2;
+  pointer-events:none;
+  mix-blend-mode:lighten;
+  opacity:.85;
+}
   position:absolute;top:50%;left:50%;
   transform:translate(-50%,-50%);
   width:55%;max-width:300px;
@@ -279,6 +313,46 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
   opacity:.22;
   pointer-events:none;
 }
+
+/* WHATSAPP FLUTUANTE */
+.wa-float{
+  position:fixed;bottom:2rem;right:2rem;z-index:500;
+  width:56px;height:56px;border-radius:50%;
+  background:#25D366;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px rgba(37,211,102,.4);
+  text-decoration:none;
+  transition:transform .25s,box-shadow .25s;
+  animation:waPulse 2.5s ease-in-out infinite;
+}
+.wa-float:hover{transform:scale(1.1);box-shadow:0 6px 28px rgba(37,211,102,.6)}
+.wa-float svg{width:28px;height:28px;fill:#fff}
+@keyframes waPulse{
+  0%,100%{box-shadow:0 4px 20px rgba(37,211,102,.4)}
+  50%{box-shadow:0 4px 32px rgba(37,211,102,.7),0 0 0 8px rgba(37,211,102,.1)}
+}
+
+/* CTA BANNER */
+.cta-banner{
+  background:var(--terracota);
+  padding:3rem 4rem;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:1.5rem;
+}
+.cta-banner-text h3{
+  font-family:var(--font-d);font-size:1.5rem;font-weight:300;
+  color:var(--cream);margin-bottom:.4rem;
+}
+.cta-banner-text p{font-size:.78rem;color:rgba(247,243,236,.75);font-weight:300;}
+.btn-white{
+  font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--dark-green);background:var(--cream);
+  border:none;padding:.95rem 2.2rem;cursor:pointer;
+  text-decoration:none;display:inline-block;
+  transition:background .25s,transform .2s;font-family:var(--font-b);font-weight:600;
+  white-space:nowrap;
+}
+.btn-white:hover{background:var(--nude-light);transform:translateY(-2px)}
 
 /* FOOTER */
 .f-logo-img{ height:48px; width:auto; opacity:.75; }
@@ -324,8 +398,11 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
 <!-- NAV -->
 <header id="navbar">
   <a href="#home" class="nav-logo">
-    <img src="images/brand/logotipo-terracota.png" alt="Velame Arquitetura" class="nav-logo-img nav-logo-dark"/>
-    <img src="images/brand/logotipo-verde.png"     alt="Velame Arquitetura" class="nav-logo-img nav-logo-light" style="display:none"/>
+    <div class="nav-logo-icon">
+      <img src="images/brand/simbolo-terracota.png" alt="" class="nav-logo-simbolo nav-logo-simbolo-dark"/>
+      <img src="images/brand/simbolo-verde.png" alt="" class="nav-logo-simbolo nav-logo-simbolo-light"/>
+    </div>
+    <span class="nav-logo-text">VELAME</span>
   </a>
   <nav class="nav-links">
     <a href="#sobre"    data-pt="Sobre"    data-en="About">Sobre</a>
@@ -342,7 +419,7 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
 <!-- HOME -->
 <section id="home">
   <div class="hero-left">
-    <p class="hero-eyebrow" data-pt="Salvador, Bahia — Arquitetura & Construção" data-en="Salvador, Bahia — Architecture & Construction">Salvador, Bahia — Arquitetura & Construção</p>
+    <p class="hero-eyebrow" data-pt="Salvador, Bahia — Projetos no Brasil e no Mundo" data-en="Salvador, Bahia — Projects Across Brazil and Beyond">Salvador, Bahia — Projetos no Brasil e no Mundo</p>
     <h1 class="hero-title">
       <span data-pt="Arquitetura <em>contemporânea.</em><br>Profundidade técnica." data-en="<em>Contemporary</em><br>architecture.<br>Technical depth.">Arquitetura <em>contemporânea.</em><br>Profundidade técnica.</span>
     </h1>
@@ -353,7 +430,7 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
     </p>
     <div class="hero-ctas">
       <a href="#projetos" class="btn-p" data-pt="Ver Portfólio" data-en="Explore Portfolio">Ver Portfólio</a>
-      <a href="#contato"  class="btn-o" data-pt="Falar com o Estúdio" data-en="Contact Studio">Falar com o Estúdio</a>
+      <a href="#contato"  class="btn-o" data-pt="Falar com o Escritório" data-en="Contact Us">Falar com o Escritório</a>
     </div>
     <div class="hero-scroll">
       <div class="scroll-line"></div>
@@ -362,7 +439,7 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
   </div>
   <div class="hero-right">
     <div class="hero-estampa"></div>
-    <img src="images/brand/simbolo-terracota.png" alt="" class="hero-simbolo"/>
+    <img src="images/brand/simbolo-terracota.png" alt="" class="hero-submarca"/>
     <div class="hero-badge">
       <span class="hero-badge-top" data-pt="Fundado em" data-en="Founded">Fundado em</span>
       <span class="hero-badge-bot">Velame, 2025</span>
@@ -374,7 +451,7 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
 <section id="sobre">
   <div class="about-visual">
     <div class="about-v-bg">
-      <img src="images/brand/simbolo-verde.png" alt="" class="about-simbolo"/>
+      <img src="images/brand/simbolo-verde.png" alt="" class="about-simbolo" style="mix-blend-mode:screen"/>
     </div>
     <div class="about-stats fade-in">
       <div class="stat">
@@ -396,7 +473,7 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
     </div>
   </div>
   <div class="about-content fade-in">
-    <p class="s-label" data-pt="O Estúdio" data-en="The Studio">O Estúdio</p>
+    <p class="s-label" data-pt="O Escritório" data-en="The Studio">O Escritório</p>
     <div class="divider"></div>
     <h2 class="s-title"><span data-pt="Letícia <em>Velame</em>" data-en="Letícia <em>Velame</em>">Letícia <em>Velame</em></span></h2>
     <p class="s-body"
@@ -416,7 +493,6 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
       <span class="cred">IBAPE-BA</span>
       <span class="cred" data-pt="Pesquisa Acadêmica" data-en="Academic Research">Pesquisa Acadêmica</span>
       <span class="cred" data-pt="Canteiro de Obras" data-en="On-Site Experience">Canteiro de Obras</span>
-      <span class="cred" data-pt="Alto Padrão" data-en="High Standard">Alto Padrão</span>
     </div>
   </div>
 </section>
@@ -493,10 +569,27 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
         <span class="serv-tag" data-pt="Avaliações" data-en="Valuations">Avaliações</span>
         <span class="serv-tag">IBAPE-BA</span>
         <span class="serv-tag" data-pt="Perícias Judiciais" data-en="Judicial Expertise">Perícias Judiciais</span>
+        <span class="serv-tag" data-pt="Vistoria de Recebimento" data-en="Handover Inspection">Vistoria de Recebimento</span>
       </div>
     </div>
   </div>
 </section>
+
+<!-- WHATSAPP FLUTUANTE -->
+<a href="https://wa.me/5571991888006" class="wa-float" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<!-- CTA APÓS SERVIÇOS -->
+<div class="cta-banner">
+  <div class="cta-banner-text">
+    <h3 data-pt="Seu projeto começa com uma conversa." data-en="Your project starts with a conversation.">Seu projeto começa com uma conversa.</h3>
+    <p data-pt="Conte sua ideia — do planejamento à execução, cuidamos de tudo." data-en="Tell us your idea — from planning to execution, we handle everything.">Conte sua ideia — do planejamento à execução, cuidamos de tudo.</p>
+  </div>
+  <a href="#contato" class="btn-white" data-pt="Solicitar Consulta" data-en="Request Consultation">Solicitar Consulta</a>
+</div>
 
 <!-- PROJETOS -->
 <section id="projetos">
@@ -621,6 +714,54 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
   </div>
 </section>
 
+<!-- CTA APÓS PORTFÓLIO -->
+<div class="cta-banner" style="background:var(--dark-green)">
+  <div class="cta-banner-text">
+    <h3 data-pt="Gostou do que viu?" data-en="Like what you see?">Gostou do que viu?</h3>
+    <p data-pt="Vamos criar juntos o seu espaço. Entre em contato e conte seu projeto." data-en="Let's create your space together. Get in touch and tell us about your project.">Vamos criar juntos o seu espaço. Entre em contato e conte seu projeto.</p>
+  </div>
+  <a href="https://wa.me/5571991888006" class="btn-white" target="_blank" rel="noopener" data-pt="Falar no WhatsApp" data-en="Chat on WhatsApp">Falar no WhatsApp</a>
+</div>
+
+<!-- DEPOIMENTOS -->
+<section id="depoimentos" style="padding:6rem 4rem;background:var(--nude-light)">
+  <div class="fade-in" style="margin-bottom:3.5rem">
+    <p class="s-label" data-pt="O Que Dizem" data-en="What They Say">O Que Dizem</p>
+    <div class="divider"></div>
+    <h2 class="s-title"><span data-pt="Depoimentos de <em>Clientes</em>" data-en="Client <em>Testimonials</em>">Depoimentos de <em>Clientes</em></span></h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem">
+
+    <div class="fade-in" style="background:var(--cream);padding:2.2rem;display:flex;flex-direction:column;gap:1.2rem">
+      <p style="font-size:.8rem;line-height:1.9;color:var(--ink-soft);font-weight:300;font-style:italic">"A Letícia transformou completamente nossa visão em realidade. O processo foi claro, organizado e o resultado superou todas as expectativas. Recomendo sem hesitar."</p>
+      <div style="border-top:1px solid var(--nude-mid);padding-top:1rem">
+        <p style="font-size:.72rem;font-weight:600;color:var(--dark-green);letter-spacing:.08em">Cliente — Projeto Residencial</p>
+        <p style="font-size:.65rem;color:var(--terracota);letter-spacing:.15em;text-transform:uppercase;margin-top:.2rem">Lauro de Freitas, BA</p>
+      </div>
+    </div>
+
+    <div class="fade-in" style="background:var(--cream);padding:2.2rem;display:flex;flex-direction:column;gap:1rem">
+      <div style="background:var(--nude-mid);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft)">
+        Print do depoimento
+      </div>
+      <div style="border-top:1px solid var(--nude-mid);padding-top:1rem">
+        <p style="font-size:.72rem;font-weight:600;color:var(--dark-green);letter-spacing:.08em">Cliente — Projeto Comercial</p>
+        <p style="font-size:.65rem;color:var(--terracota);letter-spacing:.15em;text-transform:uppercase;margin-top:.2rem">Salvador, BA</p>
+      </div>
+    </div>
+
+    <div class="fade-in" style="background:var(--cream);padding:2.2rem;display:flex;flex-direction:column;gap:1.2rem">
+      <p style="font-size:.8rem;line-height:1.9;color:var(--ink-soft);font-weight:300;font-style:italic">"Profissional extremamente competente, atenciosa e criativa. O acompanhamento de obra foi impecável e a entrega no prazo. Com certeza voltarei a contratar."</p>
+      <div style="border-top:1px solid var(--nude-mid);padding-top:1rem">
+        <p style="font-size:.72rem;font-weight:600;color:var(--dark-green);letter-spacing:.08em">Cliente — Interiores + Obra</p>
+        <p style="font-size:.65rem;color:var(--terracota);letter-spacing:.15em;text-transform:uppercase;margin-top:.2rem">Salvador, BA</p>
+      </div>
+    </div>
+
+  </div>
+  <p style="font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft);margin-top:2rem;opacity:.5;text-align:center" data-pt="* Depoimentos reais serão adicionados em breve" data-en="* Real testimonials coming soon">* Depoimentos reais serão adicionados em breve</p>
+</section>
+
 <!-- CONTATO -->
 <section id="contato">
   <div class="contact-left fade-in">
@@ -645,7 +786,7 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
       </div>
       <div>
         <p class="c-item-label" data-pt="Localização" data-en="Location">Localização</p>
-        <span class="c-item-val">Salvador, Bahia — Brasil</span>
+        <span class="c-item-val">Lauro de Freitas, Bahia — Brasil</span>
       </div>
     </div>
     <div class="social-row">
@@ -689,14 +830,20 @@ body{font-family:var(--font-b);background:var(--cream);color:var(--ink);overflow
 
 <!-- FOOTER -->
 <footer>
-  <img src="images/brand/logotipo-verde.png" alt="Velame Arquitetura" class="f-logo-img"/>
+  <div style="display:flex;align-items:center;gap:.8rem">
+    <div style="width:36px;height:36px;border-radius:50%;background:var(--nude-mid);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden">
+      <img src="images/brand/simbolo-verde.png" alt="" style="width:22px;height:22px;object-fit:contain;mix-blend-mode:screen"/>
+    </div>
+    <span class="f-logo">VELAME</span>
+  </div>
   <span class="f-copy">© 2025–2026 · <span data-pt="Todos os direitos reservados" data-en="All rights reserved">Todos os direitos reservados</span></span>
   <div class="f-links">
-    <a href="#home"     data-pt="Início"   data-en="Home">Início</a>
-    <a href="#sobre"    data-pt="Sobre"    data-en="About">Sobre</a>
-    <a href="#servicos" data-pt="Serviços" data-en="Services">Serviços</a>
-    <a href="#projetos" data-pt="Projetos" data-en="Portfolio">Projetos</a>
-    <a href="#contato"  data-pt="Contato"  data-en="Contact">Contato</a>
+    <a href="#home"     data-pt="Início"      data-en="Home">Início</a>
+    <a href="#sobre"    data-pt="Sobre"       data-en="About">Sobre</a>
+    <a href="#servicos" data-pt="Serviços"    data-en="Services">Serviços</a>
+    <a href="#projetos" data-pt="Projetos"    data-en="Portfolio">Projetos</a>
+    <a href="#depoimentos" data-pt="Depoimentos" data-en="Testimonials">Depoimentos</a>
+    <a href="#contato"  data-pt="Contato"     data-en="Contact">Contato</a>
   </div>
   <img src="images/brand/submarca-verde.png" alt="" class="f-submarca"/>
 </footer>
