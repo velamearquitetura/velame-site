@@ -81,3 +81,24 @@ collections:
           - { label: "Parágrafo 2 PT", name: "p2_pt", widget: "text" }
           - { label: "Parágrafo 2 EN", name: "p2_en", widget: "text" }
           - { label: "Foto de Perfil (opcional)", name: "foto_perfil", widget: "image", required: false }
+
+  # ── DEPOIMENTOS ──
+  - name: "depoimentos"
+    label: "Depoimentos"
+    files:
+      - label: "Lista de Depoimentos"
+        name: "lista"
+        file: "_data/depoimentos.json"
+        fields:
+          - label: "Depoimentos"
+            name: "items"
+            widget: "list"
+            summary: "{{fields.cliente}} — {{fields.local}}"
+            fields:
+              - { label: "Cliente / Tipo de Projeto", name: "cliente", widget: "string", hint: "Ex: Cliente — Projeto Residencial" }
+              - { label: "Local", name: "local", widget: "string", hint: "Ex: Salvador, BA" }
+              - { label: "Texto do Depoimento (PT)", name: "texto_pt", widget: "text", required: false, hint: "Deixe em branco se for usar print/imagem" }
+              - { label: "Texto do Depoimento (EN)", name: "texto_en", widget: "text", required: false }
+              - { label: "Print / Imagem do Depoimento (opcional)", name: "imagem", widget: "image", required: false, hint: "Se preenchido, mostra a imagem no lugar do texto" }
+              - { label: "Publicado", name: "publicado", widget: "boolean", default: true }
+              - { label: "Ordem", name: "ordem", widget: "number", default: 1, value_type: "int" }

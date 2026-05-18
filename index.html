@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Fahkwang:wght@300;400;500&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet"/>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -903,6 +904,133 @@ function handleForm(e){
     btn.style.background=''
   },3500)
 }
+
+/* ── PONTE COM O PAINEL (CMS) ──
+   Carrega arquivos JSON salvos pelo painel /admin e atualiza o site.
+   Se um arquivo não existe (ex: ainda não foi editado), mantém o texto padrão. */
+async function fetchJSON(path){
+  try{
+    const r = await fetch(path, {cache:'no-store'})
+    if(!r.ok) return null
+    return await r.json()
+  }catch(e){ return null }
+}
+
+function setAttrIf(el, attr, val){ if(el && val) el.setAttribute(attr, val) }
+function setTextIf(el, val){ if(el && val) el.textContent = val }
+
+function applyHero(d){
+  if(!d) return
+  const eyebrow = document.querySelector('.hero-eyebrow')
+  setAttrIf(eyebrow, 'data-pt', d.eyebrow_pt)
+  setAttrIf(eyebrow, 'data-en', d.eyebrow_en)
+  const title = document.querySelector('.hero-title span')
+  setAttrIf(title, 'data-pt', d.titulo_pt)
+  setAttrIf(title, 'data-en', d.titulo_en)
+  const sub = document.querySelector('.hero-sub')
+  setAttrIf(sub, 'data-pt', d.sub_pt)
+  setAttrIf(sub, 'data-en', d.sub_en)
+  if(d.foto_hero){
+    const right = document.querySelector('.hero-right')
+    if(right){
+      right.style.backgroundImage = `linear-gradient(160deg, rgba(89,85,62,.55) 0%, rgba(89,85,62,.25) 100%), url('${d.foto_hero}')`
+      right.style.backgroundSize = 'cover'
+      right.style.backgroundPosition = 'center'
+    }
+  }
+}
+
+function applySobre(d){
+  if(!d) return
+  const ps = document.querySelectorAll('#sobre .about-content .s-body')
+  if(ps[0]){ setAttrIf(ps[0],'data-pt',d.p1_pt); setAttrIf(ps[0],'data-en',d.p1_en) }
+  if(ps[1]){ setAttrIf(ps[1],'data-pt',d.p2_pt); setAttrIf(ps[1],'data-en',d.p2_en) }
+}
+
+function applyInfo(d){
+  if(!d) return
+  if(d.telefone){
+    document.querySelectorAll('.c-info a[href^="https://wa.me"], .contact-left .c-info a.c-item-val[href^="https://wa.me"]').forEach(a=>{ a.textContent = d.telefone })
+  }
+  if(d.email){
+    document.querySelectorAll('a[href^="mailto:"]').forEach(a=>{
+      a.textContent = d.email
+      a.href = 'mailto:' + d.email
+    })
+  }
+  if(d.localizacao){
+    document.querySelectorAll('.c-info .c-item-val').forEach(el=>{
+      if(el.tagName==='SPAN') el.textContent = d.localizacao
+    })
+  }
+  if(d.instagram){
+    document.querySelectorAll('a[href*="instagram.com"]').forEach(a=> a.href = d.instagram)
+  }
+  if(d.linkedin && d.linkedin !== '#'){
+    document.querySelectorAll('.social-btn').forEach(a=>{
+      if(a.textContent.trim().toLowerCase()==='linkedin') a.href = d.linkedin
+    })
+  }
+  if(d.nome){
+    document.querySelectorAll('.f-logo, .nav-logo-text').forEach(el=>{
+      // mantém só "VELAME" curto no header; nome longo só no footer copy
+    })
+  }
+}
+
+function applyDepoimentos(d){
+  if(!d || !Array.isArray(d.items)) return
+  const items = d.items.filter(i => i.publicado !== false).sort((a,b)=> (a.ordem||0)-(b.ordem||0))
+  if(items.length === 0) return
+  const section = document.getElementById('depoimentos')
+  if(!section) return
+  const grid = section.querySelector('div[style*="grid-template-columns:repeat(3,1fr)"]')
+  if(!grid) return
+  grid.innerHTML = ''
+  items.forEach(d=>{
+    const card = document.createElement('div')
+    card.className = 'fade-in'
+    card.style.cssText = 'background:var(--cream);padding:2.2rem;display:flex;flex-direction:column;gap:1.2rem'
+    let body = ''
+    if(d.imagem){
+      body = `<div style="background:var(--nude-mid);aspect-ratio:4/3;overflow:hidden">
+        <img src="${d.imagem}" alt="" style="width:100%;height:100%;object-fit:cover"/>
+      </div>`
+    } else {
+      const pt = d.texto_pt || d.texto_en || ''
+      const en = d.texto_en || d.texto_pt || ''
+      body = `<p style="font-size:.8rem;line-height:1.9;color:var(--ink-soft);font-weight:300;font-style:italic"
+        data-pt="&quot;${pt.replace(/"/g,'&quot;')}&quot;"
+        data-en="&quot;${en.replace(/"/g,'&quot;')}&quot;">"${pt}"</p>`
+    }
+    card.innerHTML = body + `
+      <div style="border-top:1px solid var(--nude-mid);padding-top:1rem">
+        <p style="font-size:.72rem;font-weight:600;color:var(--dark-green);letter-spacing:.08em">${d.cliente||''}</p>
+        <p style="font-size:.65rem;color:var(--terracota);letter-spacing:.15em;text-transform:uppercase;margin-top:.2rem">${d.local||''}</p>
+      </div>`
+    grid.appendChild(card)
+    obs.observe(card)
+  })
+  // remove o aviso "Depoimentos reais serão adicionados em breve"
+  const aviso = section.querySelector('p[data-pt*="Depoimentos reais"]')
+  if(aviso) aviso.style.display = 'none'
+}
+
+async function loadCMSData(){
+  const [hero, sobre, info, dep] = await Promise.all([
+    fetchJSON('/_data/hero.json'),
+    fetchJSON('/_data/sobre.json'),
+    fetchJSON('/_data/info.json'),
+    fetchJSON('/_data/depoimentos.json'),
+  ])
+  applyHero(hero)
+  applySobre(sobre)
+  applyInfo(info)
+  applyDepoimentos(dep)
+  // re-aplica o idioma atual pra usar os novos data-pt/data-en
+  setLang(lang)
+}
+loadCMSData()
 </script>
 </body>
 </html>
