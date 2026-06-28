@@ -1,7 +1,7 @@
 ---
 title: Sítio Sabiá
 categoria: residencial
-foto_principal: /images/uploads/gemini_generated_image_l5sgy8l5sgy8l5sg.png
+foto_principal: /images/uploads/gemini_generated_image_ghjsl2ghjsl2ghjs.png
 galeria:
   - /images/uploads/gemini_generated_image_ghjsl2ghjsl2ghjs.png
   - /images/uploads/whatsapp-image-2026-06-15-at-21.43.45-3-.jpeg
