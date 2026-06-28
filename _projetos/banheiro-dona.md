@@ -1,7 +1,7 @@
 ---
 title: Banheiro Dona
 categoria: interiores
-foto_principal: /images/uploads/imagem9.png
+foto_principal: /images/uploads/gemini_generated_image_uv1rd9uv1rd9uv1r.png
 localizacao: Federação - Salvador - Bahia
 descricao_pt: >
   O ponto de partida foi um banheiro. O que apareceu durante o processo revelou
