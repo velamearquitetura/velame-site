@@ -1,7 +1,7 @@
 ---
 title: Cozinha Adá
 categoria: interiores
-foto_principal: /images/uploads/imagem5.png
+foto_principal: /images/uploads/imagem11.png
 galeria: []
 localizacao: Imbuí - Salvador - Bahia
 descricao_pt: >
