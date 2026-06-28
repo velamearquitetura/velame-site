@@ -1,7 +1,7 @@
 ---
 title: Casa Refúgio
 categoria: residencial
-foto_principal: /images/uploads/whatsapp-image-2026-06-15-at-21.50.52-1-.jpeg
+foto_principal: /images/uploads/imagem7.png
 galeria:
   - /images/uploads/whatsapp-image-2026-06-15-at-21.50.52-1-1-.jpeg
   - /images/uploads/whatsapp-image-2026-06-15-at-21.50.53-1-1-.jpeg
