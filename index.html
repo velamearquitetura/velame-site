@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Fahkwang:wght@300;400;500&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet"/>
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -1016,17 +1017,94 @@ function applyDepoimentos(d){
   if(aviso) aviso.style.display = 'none'
 }
 
+/* ── PROJETOS (carregados via API do GitHub) ── */
+const PROJECTS_REPO = 'velamearquitetura/velame-site'
+const catLabels = {
+  residencial: { pt: 'Residencial',     en: 'Residential' },
+  comercial:   { pt: 'Comercial',       en: 'Commercial' },
+  interiores:  { pt: 'Interiores',      en: 'Interiors' },
+  obras:       { pt: 'Obras',           en: 'Construction' },
+  arquitetos:  { pt: 'Para Arquitetos', en: 'For Architects' },
+}
+
+function parseFrontmatter(md){
+  const m = md.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  if(!m) return null
+  try { return (typeof jsyaml !== 'undefined') ? jsyaml.load(m[1]) : null }
+  catch(e){ console.warn('YAML parse error', e); return null }
+}
+
+async function fetchProjetos(){
+  try {
+    const r = await fetch(`https://api.github.com/repos/${PROJECTS_REPO}/contents/_projetos`)
+    if(!r.ok) return []
+    const files = await r.json()
+    if(!Array.isArray(files)) return []
+    const all = await Promise.all(
+      files.filter(f => f.type === 'file' && f.name.endsWith('.md')).map(async f => {
+        try {
+          const fr = await fetch(f.download_url)
+          if(!fr.ok) return null
+          return parseFrontmatter(await fr.text())
+        } catch(e){ return null }
+      })
+    )
+    return all.filter(p => p && p.publicado !== false)
+  } catch(e) { return [] }
+}
+
+function escapeAttr(s){ return String(s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+function escapeHTML(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
+
+function applyProjetos(projects){
+  if(!projects || projects.length === 0) return
+  projects.sort((a,b) => (Number(a.ordem)||999) - (Number(b.ordem)||999))
+  const grid = document.querySelector('.proj-grid')
+  if(!grid) return
+  grid.innerHTML = ''
+  projects.forEach(p => {
+    const card = document.createElement('div')
+    card.className = 'proj-card fade-in' + (p.featured ? ' featured' : '')
+    card.dataset.category = p.categoria || 'residencial'
+    const cat = catLabels[p.categoria] || { pt: p.categoria||'', en: p.categoria||'' }
+    const aspect = p.featured ? '16/9' : '4/3'
+    const title = escapeHTML(p.title)
+    const img = p.foto_principal
+      ? `<img src="${escapeAttr(p.foto_principal)}" alt="${escapeAttr(p.title)}" class="proj-thumb" style="width:100%;display:block;aspect-ratio:${aspect};object-fit:cover"/>`
+      : `<div class="proj-thumb ph ph-1" style="aspect-ratio:${aspect}"><span class="ph-label" data-pt="Foto em breve" data-en="Photo coming soon">Foto em breve</span></div>`
+    card.innerHTML = img + `
+      <div class="proj-overlay">
+        <p class="proj-cat" data-pt="${escapeAttr(cat.pt)}" data-en="${escapeAttr(cat.en)}">${escapeHTML(cat.pt)}</p>
+        <p class="proj-name">${title}</p>
+      </div>
+      <div class="proj-info">
+        <p class="proj-cat" data-pt="${escapeAttr(cat.pt)}" data-en="${escapeAttr(cat.en)}">${escapeHTML(cat.pt)}</p>
+        <p class="proj-name">${title}</p>
+      </div>`
+    if(p.localizacao || p.ano){
+      const meta = document.createElement('p')
+      meta.style.cssText = 'font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-soft);opacity:.6;margin-top:.2rem'
+      meta.textContent = [p.localizacao, p.ano].filter(Boolean).join(' · ')
+      card.querySelector('.proj-info').appendChild(meta)
+    }
+    grid.appendChild(card)
+    obs.observe(card)
+  })
+}
+
 async function loadCMSData(){
-  const [hero, sobre, info, dep] = await Promise.all([
+  const [hero, sobre, info, dep, projetos] = await Promise.all([
     fetchJSON('/_data/hero.json'),
     fetchJSON('/_data/sobre.json'),
     fetchJSON('/_data/info.json'),
     fetchJSON('/_data/depoimentos.json'),
+    fetchProjetos(),
   ])
   applyHero(hero)
   applySobre(sobre)
   applyInfo(info)
   applyDepoimentos(dep)
+  applyProjetos(projetos)
   // re-aplica o idioma atual pra usar os novos data-pt/data-en
   setLang(lang)
 }
