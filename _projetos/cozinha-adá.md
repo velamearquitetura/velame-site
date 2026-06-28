@@ -1,5 +1,5 @@
 ---
-title: COZINHA ADÁ
+title: Cozinha Adá
 categoria: interiores
 foto_principal: /images/uploads/imagem5.png
 galeria: []
