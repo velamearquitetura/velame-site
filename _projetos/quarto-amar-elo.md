@@ -1,7 +1,7 @@
 ---
 title: Quarto Amar-elo
 categoria: interiores
-foto_principal: /images/uploads/imagem8.png
+foto_principal: /images/uploads/imagem10.png
 localizacao: Pituba · Salvador · Bahia
 descricao_pt: >
   Ele não queria apenas um quarto. Queria um espaço que contasse quem ele é —
